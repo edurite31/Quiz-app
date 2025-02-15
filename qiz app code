@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            padding: 10px 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            background: #ddd;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .option:hover {
+            background: #ccc;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Quiz App</h2>
+        <div id="quiz-container">
+            <p id="question">Loading...</p>
+            <div id="options"></div>
+            <button onclick="nextQuestion()" class="hidden" id="next-btn">Next</button>
+        </div>
+        <p id="score" class="hidden"></p>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What is the capital of France?",
+                options: ["Berlin", "Madrid", "Paris", "Rome"],
+                answer: "Paris"
+            },
+            {
+                question: "Which is the largest planet in our solar system?",
+                options: ["Earth", "Mars", "Jupiter", "Saturn"],
+                answer: "Jupiter"
+            },
+            {
+                question: "Who wrote 'Hamlet'?",
+                options: ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
+                answer: "William Shakespeare"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            let questionData = questions[currentQuestionIndex];
+            document.getElementById("question").innerText = questionData.question;
+            let optionsContainer = document.getElementById("options");
+            optionsContainer.innerHTML = "";
+            
+            questionData.options.forEach(option => {
+                let btn = document.createElement("button");
+                btn.innerText = option;
+                btn.classList.add("option");
+                btn.onclick = () => checkAnswer(option, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, btn) {
+            let correctAnswer = questions[currentQuestionIndex].answer;
+            if (selected === correctAnswer) {
+                btn.style.backgroundColor = "green";
+                score++;
+            } else {
+                btn.style.backgroundColor = "red";
+            }
+            document.getElementById("next-btn").classList.remove("hidden");
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+                document.getElementById("next-btn").classList.add("hidden");
+            } else {
+                document.getElementById("quiz-container").classList.add("hidden");
+                document.getElementById("score").innerText = `Your Score: ${score}/${questions.length}`;
+                document.getElementById("score").classList.remove("hidden");
+            }
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
